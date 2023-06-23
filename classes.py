@@ -32,7 +32,7 @@ class HeadHunter(Engine):
         return responce.json()["items"]
 
     def get_formatted_vacancies(self):
-        formatted_vacancies = []
+        vacancies_list = []
 
         for vacancy in self.vacancies:
             formatted_vacancies = {
@@ -56,7 +56,8 @@ class HeadHunter(Engine):
                 formatted_vacancies["salary_to"] = None
                 formatted_vacancies["currency"] = None
                 formatted_vacancies["currency_value"] = None
-        return formatted_vacancies
+            vacancies_list.append(formatted_vacancies)
+        return vacancies_list
 
     def get_vacancies(self, page_count=2):
         self.vacancies = []  # очищае список вакансий
@@ -86,7 +87,7 @@ class SuperJob(Engine):
             "archive": False,
         }
         self.headers = {
-            "v3.r.137626540.214b7a3c0fc3cd1fd8634c4b6b8f23bf49a9ac08.e8bb9b6e2821197a2688561e7c1db9188701edf9"
+            "X-Api-App-Id":"v3.r.137626540.214b7a3c0fc3cd1fd8634c4b6b8f23bf49a9ac08.e8bb9b6e2821197a2688561e7c1db9188701edf9"
         }
         self.vacancies = []
 
@@ -129,9 +130,9 @@ class SuperJob(Engine):
 
         return formatted_vacancies
 
-    def get_vacancies(self, pages_count=2):
+    def get_vacancies(self, page_count=2):
         self.vacancies = []  # очищаем список вакансий
-        for page in range(pages_count):
+        for page in range(page_count):
             page_vacancies = []
             self.params["page"] = page
             print(f"({self.__class__.__name__}) Парсинг страницы {page} -", end=" ")
@@ -164,12 +165,12 @@ class Vacancy:
             salary_from, salary_to = "", ""
             if self.salary_from:
                 salary_from = f"от {self.salary_from} {self.currency}"
-                if self.currency != "RUR":
-                    salary_from += f" ({round(self.salary_from * self.currency_value, 2)} RUR)"
+                # if self.currency != "RUR":
+                #     salary_from += f" ({round(self.salary_from * self.currency_value, 2)} RUR)"
             if self.salary_to:
                 salary_to = f"до {self.salary_to} {self.currency}"
-                if self.currency != "RUR":
-                    salary_to += f" ({round(self.salary_to * self.currency_value, 2)} RUR)"
+                # if self.currency != "RUR":
+                #     salary_to += f" ({round(self.salary_to * self.currency_value, 2)} RUR)"
             salary = " ".join([salary_from, salary_to]).strip()
         return f"""
         Работадатель: \"{self.employer}\"
